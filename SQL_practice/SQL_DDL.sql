@@ -58,4 +58,24 @@ ADD UNIQUE (ID);
 ALTER TABLE Persons
 DROP INDEX UC_Person;
 
+-- PK설정
+CREATE TABLE Persons (
+	id INT NOT NULL,
+	lastname VARCHAR(255) NOT NULL,
+	firstname VARCHAR(255),
+	age INT,
+	PRIMARY KEY (id)
+);
+
+
+-- primary key를 여러 컬럼에 지정하는 경우
+CREATE TABLE Persons (
+	id INT NOT NULL,
+	lastname VARCHAR(255) NOT NULL,
+	firstname VARCHAR(255),
+	age INT,
+	CONSTRAINT PK_Person PRIMARY KEY (id, lastname)
+);
+
+DESC Persons;
 
