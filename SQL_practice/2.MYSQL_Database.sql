@@ -112,6 +112,37 @@ WHERE contactName LIKE 'a%n';
 SELECT * FROM Customer
 WHERE contactName NOT LIKE 'a%';
 
+-- IN 연산자
+-- 독일 프랑스 영국에있는 모든 고객을 선택
+SELECT * FROM Customer
+WHERE Country IN ('Germany', 'France', 'UK');
+-- 독일 프랑스 영국에 없는 모든 고객의 수
+SELECT Count(*) FROM Customer
+WHERE Country NOT IN ('Germany', 'France', 'UK');
 
+-- BETWEEN 연산자
+-- 가격이 10~20 사이인 모든 제품을 선택
+SELECT * FROM Product
+WHERE unitprice BETWEEN 10 AND 20;
+-- 가격이 10~20 사이가 아닌 모든 제품을 선택
+SELECT * FROM Product
+WHERE unitprice NOT BETWEEN 10 AND 20;
+-- IN이 있는 BETWEEN
+-- 가격이 10~20사이인 모든 제품을 선택 + categoryid가 1,2 또는 3인 제품을 표시하지 않는 경우.
+SELECT * FROM Product
+WHERE unitprice BETWEEN 10 AND 20
+AND categoryid NOT IN (1,2,3);
 
+-- ALIAS
+-- cutid와 contactname 별칭부여 해보기.
+SELECT custid AS id, contactname AS customer
+FROM customer;
+SELECT * FROM Customer;
+-- 별칭에 공백이 들어가는 경우 "" 혹은 '' 필요.
+SELECT contactname AS cutomer, contacttitle AS "NICE POSTION"
+FROM Customer;
+-- 3개의 컬럼을 결합해서 "ADDRESS"라는 별칭 부여 해보기
+SELECT contactname, concat_ws(', ', address, postalcode, city )
+AS address
+FROM Customer;
 
