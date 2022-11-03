@@ -5,6 +5,8 @@ RFM 분석 해보기
 <br>
 출처 - [기초데이터분석을 위한 SQL](https://www.boostcourse.org/ds102/lecture/373475?isDesc=false)
 
+https://chobopark.tistory.com/259 -> 오류해결
+
 ## Contents
 - RFM 모형은 고객 가치를 분석할 때 사용되는 고객가치 평가모형.
 
