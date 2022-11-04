@@ -1,8 +1,4 @@
-# SQL
-
-### SQL_practice
-- 배우고, 따라하기
-### SQL_portfolio
+# SQL_portfolio
 - 준비중
 
 ### Tips
