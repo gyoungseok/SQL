@@ -41,7 +41,7 @@ ORDER BY 1;
 SELECT location, population, MAX(total_cases) AS HighestInfectionCount, Max((total_cases/Population)) * 100 AS PercentPopulationInfected
 FROM coviddeath
 WHERE population > 10000000 /* 인구 규모가 작은 국가들을 제외하기 위해서 인구를 천만명 초과로 기준을 정했다. */
-GROUP BY location, population2
+GROUP BY location, population
 ORDER BY PercentPopulationInfected DESC;
 
 /*
@@ -50,8 +50,6 @@ cast(), convert() 함수를 통해 total_deaths 타입을 숫자형으로 변환
 unsigned는 음수를 표현하지 않아도 될 때 사용함.
 */
 
-/* 이 쿼리는 문제가 있다.이 쿼리는 문제가 있다.이 쿼리는 문제가 있다.이 쿼리는 문제가 있다.이 쿼리는 문제가 있다.이 쿼리는 문제가 있다.이 쿼리는 문제가 있다. */
-
 SELECT location, MAX(cast(total_deaths AS UNSIGNED)) AS TotalDeathCount
 FROM coviddeath
 WHERE continent IS NOT NULL
@@ -59,5 +57,25 @@ GROUP BY location
 ORDER BY TotalDeathCount DESC;
 
 
+/*
+아시아 대륙 총 사망자수 조회
+*/
+SELECT continent, MAX(cast(total_deaths AS UNSIGNED)) AS TotalDeathCount
+FROM coviddeath
+WHERE continent = 'Asia'
+GROUP BY continent
+ORDER BY TotalDeathCount DESC;
+
+/*
+한국의 사망자 수 및 사망률
+*/
+
+SELECT sum(new_cases) AS total_cases,
+	   sum(cast(new_deaths AS UNSIGNED)) AS total_deaths,
+	   sum(cast(new_deaths AS UNSIGNED)) / sum(new_cases) * 100 AS DeathPercentage
+FROM coviddeath
+WHERE location = 'South Korea'
+;
 
 
+-- 인구대비 백신접종률
