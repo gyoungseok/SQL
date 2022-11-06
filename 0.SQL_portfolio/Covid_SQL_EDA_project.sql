@@ -77,16 +77,53 @@ WHERE location = 'South Korea'
 ;
 
 
--- 국가별 백신 접종자수 조회
+/* 
+한국의 백신 누적 접종자수
+국가별 백신 누적접종자수 조회
+*/
 SELECT dea.continent, dea.location, dea.date, dea.population, vac.new_vaccinations
-, SUM(vac.new_vaccinations) over(PARTITION BY dea.location ORDER BY dea.location, dea.DATE) AS 누적접종자수
+, SUM(vac.new_vaccinations) over(PARTITION BY dea.location ORDER BY dea.location, dea.DATE) AS CumulPeopleVaccinated
 FROM coviddeath dea
 JOIN covidvaccination vac
 ON dea.location = vac.location 
 AND dea.date = vac.date 
-WHERE dea.continent IS NOT NULL
--- WHERE dea.location LIKE 'South Korea' /*한국의 백신접종자수를 파악할 수도 있다. 2021-02-26부터 시작*/
+-- WHERE dea.continent IS NOT NULL
+WHERE dea.location LIKE 'South Korea' /*한국의 백신접종자 2021-02-26부터 시작*/
 ORDER BY 2,3;
+
+/* 
+한국의 백신 누적 접종자 비율
+국가별 백신 누적접종자 비율
+CTE, CommonTableExpression
+*/
+
+WITH PopvsVac (continent, loacation, DATE, population, new_vaccinations, CumulPeopleVaccinated)
+AS (
+SELECT dea.continent, dea.location, dea.DATE, dea.population, vac.new_vaccinations, sum(vac.new_vaccinations) over (PARTITION BY dea.location ORDER BY dea.location, dea.DATE) AS CumulPeopleVaccinated
+FROM coviddeath dea
+JOIN covidvaccination vac
+ON dea.location = vac.location
+AND dea.date = vac.date
+-- WHERE dea.continent IS NOT NULL
+WHERE dea.location LIKE 'South Korea'
+)
+SELECT *, (CumulPeopleVaccinated/population)*100
+FROM PopvsVac
+;
+
+
+/* 
+데이터 저장 목적의 뷰를 생성, 차후 시각화에 사용
+*/
+
+CREATE VIEW PercentPopulationVaccinated AS
+SELECT dea.continent, dea.location, dea.date, dea.population, vac.new_vaccinations, sum(vac.new_vaccinations) over(PARTITION BY dea.location ORDER BY dea.location, dea.DATE) AS CumulPeopleVaccinated
+FROM coviddeath AS dea
+JOIN covidvaccination vac
+ON dea.location = vac.location
+AND dea.date = vac.date
+WHERE dea.continent IS NOT NULL;
+
 
 
 
