@@ -8,12 +8,12 @@ WHERE continent IS NOT NULL
 ORDER BY 3;
 
 /* 
-'coviddeath'테이블에서 분석 데이터를 지정하고, NULL값이 없는 경우만 조회해서, 1번 컬럼(location)을 기준으로 오름차순 정렬  
+한국의 총 확진자수, 신규확진자, 총사망자 조회
 */
-SELECT location AS 위치, DATE AS 날짜, total_cases AS 총확진자, new_cases AS 신규확진자, total_deaths AS 총사망자, population AS 인구
+SELECT location, DATE AS 날짜, total_cases AS 총확진자, new_cases AS 신규확진자, total_deaths AS 총사망자, population AS 인구
 FROM coviddeath
-WHERE continent IS NOT NULL
-ORDER BY 1; 
+WHERE location LIKE 'South Korea' 
+ORDER BY 1, 2; 
 
 /*
  Total cases vs Deaths 
@@ -32,11 +32,10 @@ Total cases vs Population
 SELECT location, DATE, population, total_cases, (total_cases/population) * 100 AS PercentPopulationInfected
 FROM coviddeath
 WHERE location LIKE 'South Korea'
-ORDER BY 1;
+ORDER BY 1,2;
 
 /*
 인구당 감염률이 높은 국가를 조회하기.
-한국이 49.72%로 인구 천만이상 국가에서 4위를 차지했다.
 */
 SELECT location, population, MAX(total_cases) AS HighestInfectionCount, Max((total_cases/Population)) * 100 AS PercentPopulationInfected
 FROM coviddeath
@@ -50,7 +49,7 @@ cast(), convert() 함수를 통해 total_deaths 타입을 숫자형으로 변환
 unsigned는 음수를 표현하지 않아도 될 때 사용함.
 */
 
-SELECT location, MAX(cast(total_deaths AS UNSIGNED)) AS TotalDeathCount
+SELECT location, MAX(total_deaths) AS TotalDeathCount
 FROM coviddeath
 WHERE continent IS NOT NULL
 GROUP BY location
@@ -60,7 +59,7 @@ ORDER BY TotalDeathCount DESC;
 /*
 아시아 대륙 총 사망자수 조회
 */
-SELECT continent, MAX(cast(total_deaths AS UNSIGNED)) AS TotalDeathCount
+SELECT continent, MAX(total_deaths) AS TotalDeathCount
 FROM coviddeath
 WHERE continent = 'Asia'
 GROUP BY continent
@@ -71,11 +70,25 @@ ORDER BY TotalDeathCount DESC;
 */
 
 SELECT sum(new_cases) AS total_cases,
-	   sum(cast(new_deaths AS UNSIGNED)) AS total_deaths,
-	   sum(cast(new_deaths AS UNSIGNED)) / sum(new_cases) * 100 AS DeathPercentage
+	   sum(new_deaths ) AS total_deaths,
+	   sum(new_deaths) / sum(new_cases) * 100 AS DeathPercentage
 FROM coviddeath
 WHERE location = 'South Korea'
 ;
 
 
--- 인구대비 백신접종률
+-- 국가별 백신 접종자수 조회
+SELECT dea.continent, dea.location, dea.date, dea.population, vac.new_vaccinations
+, SUM(vac.new_vaccinations) over(PARTITION BY dea.location ORDER BY dea.location, dea.DATE) AS 누적접종자수
+FROM coviddeath dea
+JOIN covidvaccination vac
+ON dea.location = vac.location 
+AND dea.date = vac.date 
+WHERE dea.continent IS NOT NULL
+-- WHERE dea.location LIKE 'South Korea' /*한국의 백신접종자수를 파악할 수도 있다. 2021-02-26부터 시작*/
+ORDER BY 2,3;
+
+
+
+
+
