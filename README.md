@@ -2,7 +2,7 @@
 This portfolio is intended for learning purposes and demonstrates my SQL experience to be included in my CV.
 
 ## Contents
-### 1. [Covid-Data Exploration Analysis by using MySQL](https://github.com/gyoungseok/SQL/tree/main/SQL_portfolio/Covid_EDA)
+### 1. [Covid-Data Exploration Analysis by using MySQL](https://github.com/gyoungseok/SQL/tree/main/Covid_EDA)
 #### Explore the global data on confirmed COVID-19 deaths.
 * Dataset source: [Ourworldindata](https://ourworldindata.org/covid-deaths)
 * Language used for querying: [MySQL](https://www.mysql.com)
