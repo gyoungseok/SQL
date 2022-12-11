@@ -113,7 +113,7 @@ FROM PopvsVac
 
 
 /* 
-데이터 저장 목적의 뷰를 생성, 차후 시각화에 사용
+데이터 저장 목적의 뷰를 생성
 */
 
 CREATE VIEW PercentPopulationVaccinated AS
